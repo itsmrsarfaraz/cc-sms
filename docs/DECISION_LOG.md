@@ -54,3 +54,11 @@ Each entry records a decision, the reasoning, and the consequences. Entries are 
 - **Decision:** `institution_memberships` has exactly one row per user per institution (unique on `user_id`, `institution_id`). Campus scope is stored on each role assignment (`campus_id` nullable; null means institution-wide).
 - **Why:** Status and deactivation belong to the person-in-institution, not to a campus. A teacher at two campuses is one membership with two role assignments, instead of two memberships that could drift apart.
 - **Consequence:** Role assignment tables carry `institution_id` and use composite foreign keys to both `institution_memberships (institution_id, id)` and `campuses (institution_id, id)`.
+
+
+## ADR-009: Roles are institution-owned; isolation is enforced by MySQL
+
+- **Status:** Accepted
+- **Decision:** Every institution role belongs to exactly one institution; new institutions get their own copies of the standard roles, which they may customise. Platform roles have no institution. Role assignments use composite foreign keys so the membership, role and campus must all belong to the same institution. A CHECK constraint ties `scope` to `institution_id`. Generated columns (`tenant_key`, `campus_key`) map NULL to 0 so unique indexes work for platform roles and institution-wide assignments.
+- **Why:** Isolation is enforced by the database, not only by application code. Editing one school's role can never change another school's access.
+- **Consequence:** Creating an institution must also create its role copies (Step 13). The application layer must only attach `platform`-scope roles to `platform_role_user`.
