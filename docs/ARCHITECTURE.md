@@ -24,7 +24,7 @@ Isolation is enforced in layers, so no single mistake exposes another institutio
 ## Identity and permissions
 
 - `users`: one row per person (login identity).
-- `institution_memberships`: user, institution, optional campus, status.
+- `institution_memberships`: one row per user per institution, with status. Campus scope is on role assignments (ADR-008).
 - Roles and permissions are institution-level or platform-level. Roles attach to memberships.
 - Sensitive actions require an extra permission and write an audit entry.
 

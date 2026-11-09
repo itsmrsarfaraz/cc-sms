@@ -46,3 +46,11 @@ Each entry records a decision, the reasoning, and the consequences. Entries are 
 - **Status:** Accepted
 - **Decision:** Each institution has a unique `slug`. The 3-page public website resolves its tenant from the slug (path-based first), with optional custom domains later. The logged-in application resolves its tenant from the user's active membership.
 - **Why:** Public visitors have no login and no membership.
+
+
+## ADR-008: Campus scope lives on the role assignment, not the membership
+
+- **Status:** Accepted (refines ADR-002)
+- **Decision:** `institution_memberships` has exactly one row per user per institution (unique on `user_id`, `institution_id`). Campus scope is stored on each role assignment (`campus_id` nullable; null means institution-wide).
+- **Why:** Status and deactivation belong to the person-in-institution, not to a campus. A teacher at two campuses is one membership with two role assignments, instead of two memberships that could drift apart.
+- **Consequence:** Role assignment tables carry `institution_id` and use composite foreign keys to both `institution_memberships (institution_id, id)` and `campuses (institution_id, id)`.
