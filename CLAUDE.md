@@ -1723,3 +1723,46 @@ Never silently make assumptions that could affect money, academic results, atten
 When a requirement is unclear, identify the ambiguity and recommend a sensible default that can be configured.
 
 **Your ultimate objective is to build a reliable educational institution management platform that Crafting Colons can maintain, extend, deploy, and commercially offer to multiple institutions.**
+
+
+---
+
+# 39. ADDENDUM — PLATFORM BILLING, PUBLIC WEBSITE AND ARCHITECTURE DECISIONS
+
+This addendum extends the specification above. Where it conflicts with earlier sections, this addendum wins. Architectural decisions are recorded in `docs/DECISION_LOG.md`.
+
+## 39.1 Platform billing: plans, subscriptions and coupons
+
+Institution owners subscribe to packages. The platform must support:
+
+- Plans that define feature entitlements and usage limits (for example, number of students, campuses, or enabled modules).
+- One subscription per institution (the institution is the billing entity; the owner user is the billing contact).
+- Subscription states: trial, active, past due, suspended, cancelled.
+- Coupon codes: percentage, fixed amount, and free-period types; validity dates; maximum redemptions; plan applicability; per-institution redemption tracking.
+- Feature gating: modules and limits are enforced against the institution's active subscription on the server.
+- Platform administrators manage plans, coupons and subscriptions. Institution owners view their plan, invoices and usage.
+- Payment gateways are accessed through an abstraction so no single provider is required.
+- All billing records are immutable once issued. Corrections use credit notes or adjustments.
+
+## 39.2 Institution public website
+
+Each institution gets a public website of three pages: Home, About and Contact.
+
+- The institution is resolved from its unique `slug` (path-based first, custom domains later).
+- Content and branding (logo, colours, text, images) are editable by authorized institution staff.
+- The Contact page includes a protected contact form (rate limiting and spam protection).
+- Basic SEO fields (title, description) per page.
+- Public pages expose only data the institution has marked public.
+
+## 39.3 Multiple owners and campuses
+
+- One person may own several institutions through multiple memberships.
+- An institution may have several campuses from the start.
+- Roles attach to institution memberships, with optional campus scope.
+
+## 39.4 Phase list additions
+
+Insert into the Development Phases (section 37):
+
+- Phase 2B: Platform billing (plans, subscriptions, coupons).
+- Phase 3B: Institution public website.
