@@ -18,7 +18,7 @@ Status values: Not started, In progress, Complete. A module is Complete only whe
 | Phase | Scope | Status |
 |---|---|---|
 | 1 | Foundation and architecture | In progress |
-| 2 | Auth, roles, permissions, multi-tenancy | Not started |
+| 2 | Auth, roles, permissions, multi-tenancy | In progress |
 | 2B | Platform billing: plans, subscriptions, coupons | Not started |
 | 3 | Institution configuration and academic structure | Not started |
 | 3B | Institution public website (3 pages) | Not started |

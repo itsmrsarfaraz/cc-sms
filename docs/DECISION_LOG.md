@@ -62,3 +62,11 @@ Each entry records a decision, the reasoning, and the consequences. Entries are 
 - **Decision:** Every institution role belongs to exactly one institution; new institutions get their own copies of the standard roles, which they may customise. Platform roles have no institution. Role assignments use composite foreign keys so the membership, role and campus must all belong to the same institution. A CHECK constraint ties `scope` to `institution_id`. Generated columns (`tenant_key`, `campus_key`) map NULL to 0 so unique indexes work for platform roles and institution-wide assignments.
 - **Why:** Isolation is enforced by the database, not only by application code. Editing one school's role can never change another school's access.
 - **Consequence:** Creating an institution must also create its role copies (Step 13). The application layer must only attach `platform`-scope roles to `platform_role_user`.
+
+
+## ADR-010: Role templates are defaults, copied once per institution
+
+- **Status:** Accepted
+- **Decision:** `RoleTemplates` defines the standard roles and their default permissions; `PermissionCatalog` is the only source of permission keys. `ProvisionInstitutionRoles` copies the templates into a new institution and never overwrites roles that already exist. `RegisterInstitution` creates the institution, default campus, role copies, owner membership and owner role assignment in one transaction. New institutions always start in `trial` status.
+- **Why:** Schools can customise their own roles safely, re-running provisioning is harmless, and a half-created institution can never exist.
+- **Consequence:** The default permission lists are product defaults and must be reviewed by the business before launch. Template changes do not propagate to existing institutions; that needs an explicit, audited migration step.
